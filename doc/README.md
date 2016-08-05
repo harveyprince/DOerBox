@@ -1,3 +1,3 @@
 ### DOC
 ***
->here is the doc the describe this project
+>here is the doc to describe this project
