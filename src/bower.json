@@ -1,0 +1,20 @@
+{
+  "name": "DOerBox",
+  "description": "a todo platform",
+  "main": "",
+  "authors": [
+    "harveyprince"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "DOerBox"
+  ],
+  "homepage": "https://github.com/harveyprince/DOerBox",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
