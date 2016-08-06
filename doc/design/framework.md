@@ -1,6 +1,7 @@
 # framework
 ##database
     mongodb
+    mongoose
 ##front end
     react + redux
     webpack
