@@ -7,4 +7,7 @@
     bower
     babel
 ##server
-    ...
+    express
+
+##api
+    blueprint to describe
