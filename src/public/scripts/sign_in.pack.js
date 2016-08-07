@@ -1,6 +1,7 @@
 'use strict';
 $('.ui.form')
   .form({
+    on: 'blur',
     fields: {
       email: {
         identifier: 'email',
@@ -22,3 +23,8 @@ $('.ui.form')
       }
     }
   });
+$('.sign_in.button').click( () => {
+  if ($('.ui.form').form('is valid')) {
+    console.log('pass');
+  }
+});
