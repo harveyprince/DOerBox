@@ -47,7 +47,15 @@ gulp.task('scripts', () => {
       .pipe(gulp.dest('.tmp/scripts'))
       .pipe(reload({stream: true}));
 });
-gulp.task('serve', ['images', 'fonts', 'styles', 'scripts'], () => {
+gulp.task('dev', () => {
+    $.nodemon({
+        script: './bin/www',
+        watch: ['app.js','bin/www','routes/**/*.js'],
+    }).on('restart', () => {
+        console.log('server restarted');
+    });
+});
+gulp.task('serve', ['images', 'fonts', 'styles', 'scripts', 'dev'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -56,7 +64,7 @@ gulp.task('serve', ['images', 'fonts', 'styles', 'scripts'], () => {
   gulp.watch([
     'views/**/*',
     'public/images/**/*',
-    '.tmp/fonts/**/*'
+    '.tmp/fonts/**/*',
   ]).on('change', reload);
   gulp.watch('public/styles/**/*.scss', ['styles']);
   gulp.watch('public/scripts/**/*.pack.js', ['scripts']);

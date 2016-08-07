@@ -4,11 +4,24 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var Promise = require("bluebird");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+//database
+mongoose.Promise = Promise;
+mongoose.connect('mongodb://localhost/doerbox');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('> connection success');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
