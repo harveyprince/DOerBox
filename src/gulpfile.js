@@ -10,7 +10,7 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('styles', () => {
-  return gulp.src('public/styles/*.scss')
+  return gulp.src('public/styles/**/*.scss')
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.sass.sync({
@@ -41,6 +41,12 @@ gulp.task('fonts', () => {
     .pipe(gulp.dest('dist/fonts'));
 });
 gulp.task('scripts', () => {
+  return gulp.src('public/scripts/**/*.ori.js')
+      .pipe(named())
+      .pipe(gulp.dest('.tmp/scripts'))
+      .pipe(reload({stream: true}));
+});
+gulp.task('pack_scripts', () => {
   return gulp.src('public/scripts/**/*.pack.js')
       .pipe(named())
       .pipe(webpack(require('./webpack.config.js')))
@@ -55,7 +61,7 @@ gulp.task('dev', () => {
         console.log('server restarted');
     });
 });
-gulp.task('serve', ['images', 'fonts', 'styles', 'scripts', 'dev'], () => {
+gulp.task('serve', ['images', 'fonts', 'styles', 'pack_scripts', 'scripts', 'dev'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -67,7 +73,8 @@ gulp.task('serve', ['images', 'fonts', 'styles', 'scripts', 'dev'], () => {
     '.tmp/fonts/**/*',
   ]).on('change', reload);
   gulp.watch('public/styles/**/*.scss', ['styles']);
-  gulp.watch('public/scripts/**/*.pack.js', ['scripts']);
+  gulp.watch('public/scripts/**/*.pack.js', ['pack_scripts']);
+  gulp.watch('public/scripts/**/*.ori.js', ['scripts']);
   gulp.watch('public/fonts/**/*', ['fonts']);
 
 });
