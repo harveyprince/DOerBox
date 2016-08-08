@@ -22,7 +22,7 @@ module.exports = function(router) {
     var password = req.body.password;
     Account
       .findOne({email: email})
-      .select('_id password salt')
+      .select('email')
       .exec()
       .then((doc) => {
         if (doc) {

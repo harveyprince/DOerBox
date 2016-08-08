@@ -31,6 +31,7 @@ $('.sign_in.button').click( () => {
   if ($('.ui.form').form('is valid')) {
     var email = $('.ui.form').form('get value', 'email');
     var password = $('.ui.form').form('get value', 'password');
+    password = $.md5(password);
     $.post('/api/web/session',{
       email: email,
       password: password
