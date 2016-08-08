@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 block head
   link(rel='stylesheet', href='/styles/sign_in.css')
 block content
@@ -15,9 +15,13 @@ block content
             .ui.left.icon.input
               i.lock.icon
               input(type='password',name='password',placeholder='密码')
-          .ui.fluid.large.teal.submit.button.sign_in 登录
+          .field
+            .ui.left.icon.input
+              i.lock.icon
+              input(type='password',name='re_password',placeholder='确认密码')
+          .ui.fluid.large.teal.submit.button.sign_up 注册
         .ui.error.message
-      .ui.message 没有账号？
-        a 注册
+      .ui.message 已有账号？
+        a(href="/") 登录
 block foot
-  script(src='/scripts/sign_in.pack.js')
+  script(src='/scripts/sign_up.pack.js')
