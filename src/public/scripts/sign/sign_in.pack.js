@@ -9,6 +9,10 @@ $('.ui.form')
           {
             type: 'empty',
             prompt: '邮箱不能为空'
+          },
+          {
+            type   : 'email',
+            prompt : '这不是一个有效的邮箱'
           }
         ]
       },
@@ -25,6 +29,13 @@ $('.ui.form')
   });
 $('.sign_in.button').click( () => {
   if ($('.ui.form').form('is valid')) {
-    console.log('pass');
+    var email = $('.ui.form').form('get value', 'email');
+    var password = $('.ui.form').form('get value', 'password');
+    $.post('/api/web/session',{
+      email: email,
+      password: password
+    },(data, status) => {
+      //
+    });
   }
 });

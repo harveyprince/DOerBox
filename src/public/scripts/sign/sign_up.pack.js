@@ -9,6 +9,10 @@ $('.ui.form')
           {
             type: 'empty',
             prompt: '邮箱不能为空'
+          },
+          {
+            type   : 'email',
+            prompt : '这不是一个有效的邮箱'
           }
         ]
       },
@@ -27,6 +31,10 @@ $('.ui.form')
           {
             type: 'empty',
             prompt: '确认密码不能为空'
+          },
+          {
+            type   : 'match[password]',
+            prompt : '密码不一致'
           }
         ]
       }
@@ -34,6 +42,14 @@ $('.ui.form')
   });
 $('.sign_up.button').click( () => {
   if ($('.ui.form').form('is valid')) {
-    console.log('pass');
+    var email = $('.ui.form').form('get value', 'email');
+    var password = $('.ui.form').form('get value', 'password');
+    password = $.md5(password);
+    $.post('/api/web/account',{
+      email: email,
+      password: password
+    },(data,status) => {
+      //
+    });
   }
 });
