@@ -27,7 +27,7 @@ $('.ui.form')
       }
     }
   });
-$('.sign_in.button').click( () => {
+$('.ui.form').submit( () => {
   if ($('.ui.form').form('is valid')) {
     var email = $('.ui.form').form('get value', 'email');
     var password = $('.ui.form').form('get value', 'password');
