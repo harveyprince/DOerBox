@@ -1,5 +1,6 @@
 var md5 = require('md5');
 var Account = require('../../model/account');
+var crypto = require('crypto');
 
 module.exports = function(router) {
   var uri = '/account';
@@ -19,12 +20,47 @@ module.exports = function(router) {
   router.post(web_uri, (req, res, next) => {
     var email = req.body.email;
     var password = req.body.password;
-    var account = new Account({
-      email:email,
-      password:password,
-      salt:''
-    });
-    console.log(password);
-    res.json({password:password});
+    Account
+      .findOne({email: email})
+      .select('_id password salt')
+      .exec()
+      .then((doc) => {
+        if (doc) {
+          //already exist
+          res.json({
+            success: false,
+            message: '该邮箱账户已存在'
+          });
+        } else {
+          //don't exist
+          //secure operation
+          const buf = crypto.randomBytes(16);
+          var salt = buf.toString('hex');
+          password = md5(password + salt);
+          var account = new Account({
+            email:email,
+            password:password,
+            salt:salt
+          });
+          return account.save();
+        }
+      })
+      .then((doc) => {
+        if (doc) {
+          res.json({
+            success: true,
+            message: '注册成功'
+          });
+        }
+      })
+      .catch((err) => {
+        console.log('err');
+        console.log(err);
+        res.json({
+          success: false,
+          message: err
+        });
+      });
+
   });
 }

@@ -7,7 +7,6 @@ var Schema = mongoose.Schema;
   of course you can change this logic
  */
 var accountSchema = new Schema({
-  _id:Schema.Types.ObjectId,
   email:String,
   password:String,
   salt:String,
