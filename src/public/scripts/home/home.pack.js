@@ -4,3 +4,7 @@ $('.ui.sidebar')
   })
   .sidebar('attach events', '.menu .item')
 ;
+//fix the ios safari bug
+if (false) {
+    $('#container.segment').height($(document).height());
+}

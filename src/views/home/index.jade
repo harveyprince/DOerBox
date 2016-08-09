@@ -1,11 +1,12 @@
 extends layout
 block head
-block content
-  #content.ui.middle.aligned.center.aligned.grid
-    .column
-      h2.ui.teal.header DOerBox
-      .ui.large.form
-        .ui.stacked.segment
-          .ui.fluid.large.teal.submit.button.sign_in HOME
-
+block pusher
+  center.box
+    .ui.card.form
+      .ui.icon.input.massive
+        input(placeholder='记录你要做的事吧～')
+        i.send.icon
+    - for (var i = 0; i< 13; i++)
+      .ui.segment
+        h3 test
 block foot
