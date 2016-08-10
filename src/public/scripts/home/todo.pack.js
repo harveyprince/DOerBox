@@ -1,5 +1,5 @@
 'use strict';
-import { createStore } from 'Redux';
+import { createStore } from 'redux';
 import React,{ Component } from 'react';
 import ReactDOM from 'react-dom';
 const todo = (state, action) => {
