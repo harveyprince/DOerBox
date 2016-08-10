@@ -27,8 +27,8 @@ const todos = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
       return [
-        ...state,
-        todo(undefined, action)
+        todo(undefined, action),
+        ...state
       ];
     case 'TOGGLE_TODO':
       return state.map( (t) =>
@@ -44,24 +44,33 @@ let next_id = 0;
 class TodoApp extends Component {
   render(){
     return (
-      <div>
-        <button onClick={()=>{
+      <form
+        onSubmit={(e)=>{
           store.dispatch({
             type: 'ADD_TODO',
-            content: 'Test',
+            content: this.input.value,
             id: next_id ++
           });
-        }}>
-        add todo
-        </button>
-        <ul>
+          this.input.value = '';
+          e.preventDefault();
+        }}
+      >
+        <div className="ui icon input massive">
+          <input
+            placeholder='记录你要做的事吧～'
+            ref={node => {
+              this.input = node;
+            }} />
+          <i className="send icon"></i>
+        </div>
           {this.props.todos.map(todo =>
-            <li key={todo.id}>
-              {todo.content}
-            </li>
+            <div className="ui segment" key={todo.id}>
+              <h3>
+                {todo.content}
+              </h3>
+            </div>
           )}
-        </ul>
-      </div>
+      </form>
     )
   }
 }

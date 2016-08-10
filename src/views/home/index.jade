@@ -1,14 +1,7 @@
 extends layout
 block head
 block pusher
-  #app
   center.box
-    .ui.card.form
-      .ui.icon.input.massive
-        input(placeholder='记录你要做的事吧～')
-        i.send.icon
-    - for (var i = 0; i< 1; i++)
-      .ui.segment
-        h3 test
+    #app
 block foot
   script(src='/scripts/todo.pack.js')
