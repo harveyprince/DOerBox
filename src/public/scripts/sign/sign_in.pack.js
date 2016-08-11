@@ -36,7 +36,9 @@ $('.ui.form').submit( () => {
       email: email,
       password: password
     },(data, status) => {
-      //
+      if (data.success === true) {
+        window.location.href = '/home';
+      }
     });
   }
 });

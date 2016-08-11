@@ -46,12 +46,18 @@ class TodoApp extends Component {
     return (
       <form
         onSubmit={(e)=>{
-          store.dispatch({
-            type: 'ADD_TODO',
-            content: this.input.value,
-            id: next_id ++
+          var that = this;
+          $.post('/api/web/todo',{
+            content: that.input.value
+          },(data,status)=>{
+            store.dispatch({
+              type: 'ADD_TODO',
+              content: that.input.value,
+              id: data.todo._id
+            });
+            that.input.value = '';
           });
-          this.input.value = '';
+
           e.preventDefault();
         }}
       >
@@ -86,3 +92,19 @@ const render = () => {
 
 store.subscribe(render);
 render();
+
+$(document).ready(()=>{
+    $.get('/api/web/todo_list',(data,status)=>{
+        if (data.success) {
+            var todos = data.todos;
+            todos.forEach((t)=>{
+                store.dispatch({
+                  type: 'ADD_TODO',
+                  content: t.content,
+                  id: t._id
+                });
+            });
+
+        }
+    });
+});

@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var Promise = require("bluebird");
@@ -32,7 +32,12 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(session({
+  secret: 'harveyprince',
+  cookie: {
+    maxAge: 30*24*60*60*1000
+  }
+}));
 //static file
 app.use(express.static(path.join(__dirname, '.tmp')));
 app.use(express.static(path.join(__dirname, 'dist')));
