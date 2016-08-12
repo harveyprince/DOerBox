@@ -15,4 +15,11 @@
   .ui.card,.ui.input {
     width: 100%;
   }
+  .todo.content {
+    word-wrap: break-word;
+  }
+  .todo.toggle>i {
+    font-size: 25px;
+    color: #008080;
+  }
 }

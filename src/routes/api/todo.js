@@ -77,6 +77,64 @@ module .exports = function(router) {
 
     });
 
+    router.put(web_uri, (req, res, next) => {
+        var sess = req.session;
+        let account_id = sess.account_id;
+
+        let _id = req.body._id;
+        if (!_id) {
+            res.json({
+                success: false,
+                message: '标识码不能为空'
+            });
+            return ;
+        }
+        User
+            .findOne({
+                _accountId: account_id
+            })
+            .exec()
+            .then((doc) => {
+                if (doc) {
+                    //already
+                    return doc;
+                } else {
+                    //create a new one
+                    var user = new User({
+                        _accountId: account_id
+                    });
+                    return user.save();
+                }
+            })
+            .then((doc) => {
+                //update the doc
+                var todo = doc.todos.id(_id);
+                let content = req.body.content;
+                let tag_finish = req.body.tag_finish;
+
+                todo.content = content?content:todo.content;
+                todo.tag_finish = tag_finish?tag_finish:todo.tag_finish;
+
+                return doc.save();
+
+            })
+            .then((doc) => {
+                if (doc) {
+                    res.json({
+                        success: true,
+                        message: '更新成功'
+                    });
+                }
+            })
+            .catch((err) => {
+                res.json({
+                    success: false,
+                    messaeg: err
+                });
+            });
+
+    });
+
     router.delete(web_uri, (req, res, next) => {
         var sess = req.session;
         let account_id = sess.account_id;
@@ -87,6 +145,7 @@ module .exports = function(router) {
                 success: false,
                 message: '标识码不能为空'
             });
+            return ;
         }
         User
             .findOne({

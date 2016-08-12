@@ -8,7 +8,7 @@ const todo = (state, action) => {
       return {
         id: action.id,
         content: action.content,
-        completed: false
+        tag_finish: action.tag_finish?action.tag_finish:false
       }
     case 'TOGGLE_TODO':
       if (state.id !== action.id) {
@@ -16,7 +16,7 @@ const todo = (state, action) => {
       }
       return {
         ...state,
-        completed: !state.completed
+        tag_finish: !state.tag_finish
       }
     case 'DEL_TODO':
       return state.id !== action.id;
@@ -80,12 +80,37 @@ class TodoApp extends Component {
             <div>
               {this.props.todos.map(todo =>
                 <div className="ui segment grid" key={todo.id}>
+                  <div className="one wide column">
+                    <div className="todo toggle"
+                        onClick={(e)=>{
+                            $.ajax({
+                                url: '/api/web/todo/',
+                                type: 'PUT',
+                                data: {
+                                    _id: todo.id,
+                                    tag_finish: !todo.tag_finish
+                                },
+                                success: function(result){
+                                    console.log(result);
+                                    if (result.success) {
+                                        store.dispatch({
+                                            type: 'TOGGLE_TODO',
+                                            id: todo.id
+                                        });
+                                    }
+                                }
+                            });
+                        }}
+                    >
+                        <i className={todo.tag_finish?"toggle on icon":"toggle off icon"}></i>
+                    </div>
+                  </div>
                   <div className="twelve wide column">
-                    <h3>
+                    <h3 className="todo content">
                       {todo.content}
                     </h3>
                   </div>
-                  <div className="four wide column">
+                  <div className="one wide column">
                     <button className="ui compact icon button negative"
                         onClick={(e)=>{
                             $.ajax({
@@ -110,6 +135,7 @@ class TodoApp extends Component {
                     >
                       <i className="trash icon"></i>
                     </button>
+
                   </div>
 
                 </div>
@@ -140,7 +166,8 @@ $(document).ready(()=>{
                 store.dispatch({
                   type: 'ADD_TODO',
                   content: t.content,
-                  id: t._id
+                  id: t._id,
+                  tag_finish: t.tag_finish
                 });
             });
 
