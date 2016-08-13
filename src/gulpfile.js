@@ -42,12 +42,14 @@ gulp.task('fonts', () => {
 });
 gulp.task('scripts', () => {
   return gulp.src('public/scripts/**/*.ori.js')
+      .pipe($.plumber())
       .pipe(named())
       .pipe(gulp.dest('.tmp/scripts'))
       .pipe(reload({stream: true}));
 });
 gulp.task('pack_scripts', () => {
   return gulp.src('public/scripts/**/*.pack.js')
+      .pipe($.plumber())
       .pipe(named())
       .pipe(webpack(require('./webpack.config.js')))
       .pipe(gulp.dest('.tmp/scripts'))

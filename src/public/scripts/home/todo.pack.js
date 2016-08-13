@@ -18,6 +18,8 @@ const todo = (state, action) => {
         ...state,
         completed: !state.completed
       }
+    case 'DEL_TODO':
+      return state.id !== action.id;
     default:
       return state;
 
@@ -34,6 +36,10 @@ const todos = (state = [], action) => {
       return state.map( (t) =>
         todo(t, action)
       )
+    case 'DEL_TODO':
+      return state.filter( (t) =>
+        todo(t, action)
+      )
     default:
       return state;
   }
@@ -44,39 +50,72 @@ let next_id = 0;
 class TodoApp extends Component {
   render(){
     return (
-      <form
-        onSubmit={(e)=>{
-          var that = this;
-          $.post('/api/web/todo',{
-            content: that.input.value
-          },(data,status)=>{
-            store.dispatch({
-              type: 'ADD_TODO',
-              content: that.input.value,
-              id: data.todo._id
-            });
-            that.input.value = '';
-          });
+      <div>
+          <form
+            onSubmit={(e)=>{
+              var that = this;
+              $.post('/api/web/todo',{
+                content: that.input.value
+              },(data,status)=>{
+                store.dispatch({
+                  type: 'ADD_TODO',
+                  content: that.input.value,
+                  id: data.todo._id
+                });
+                that.input.value = '';
+              });
 
-          e.preventDefault();
-        }}
-      >
-        <div className="ui icon input massive">
-          <input
-            placeholder='记录你要做的事吧～'
-            ref={node => {
-              this.input = node;
-            }} />
-          <i className="send icon"></i>
-        </div>
-          {this.props.todos.map(todo =>
-            <div className="ui segment" key={todo.id}>
-              <h3>
-                {todo.content}
-              </h3>
+              e.preventDefault();
+            }}
+          >
+            <div className="ui icon input massive">
+              <input
+                placeholder='记录你要做的事吧～'
+                ref={node => {
+                  this.input = node;
+                }} />
+              <i className="send icon"></i>
             </div>
-          )}
-      </form>
+            </form>
+            <div>
+              {this.props.todos.map(todo =>
+                <div className="ui segment grid" key={todo.id}>
+                  <div className="twelve wide column">
+                    <h3>
+                      {todo.content}
+                    </h3>
+                  </div>
+                  <div className="four wide column">
+                    <button className="ui compact icon button negative"
+                        onClick={(e)=>{
+                            $.ajax({
+                                url: '/api/web/todo/',
+                                type: 'DELETE',
+                                data: {
+                                    _id: todo.id
+                                },
+                                success: function(result){
+                                    console.log(result);
+                                    if (result.success) {
+                                        store.dispatch({
+                                          type: 'DEL_TODO',
+                                          id: todo.id
+                                        });
+                                    }
+                                }
+
+                            });
+                            e.preventDefault();
+                        }}
+                    >
+                      <i className="trash icon"></i>
+                    </button>
+                  </div>
+
+                </div>
+              )}
+          </div>
+      </div>
     )
   }
 }
