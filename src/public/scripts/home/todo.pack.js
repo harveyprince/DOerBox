@@ -47,38 +47,43 @@ const todos = (state = [], action) => {
 
 const store = createStore(todos);
 let next_id = 0;
-class TodoApp extends Component {
-  render(){
-    return (
-      <div>
-          <form
-            onSubmit={(e)=>{
-              var that = this;
-              $.post('/api/web/todo',{
-                content: that.input.value
-              },(data,status)=>{
-                store.dispatch({
-                  type: 'ADD_TODO',
-                  content: that.input.value,
-                  id: data.todo._id
-                });
-                that.input.value = '';
-              });
+class TodoInput extends Component {
+    render() {
+        return (
+            <form
+                onSubmit={(e)=>{
+                  var that = this;
+                  $.post('/api/web/todo',{
+                    content: that.input.value
+                  },(data,status)=>{
+                    store.dispatch({
+                      type: 'ADD_TODO',
+                      content: that.input.value,
+                      id: data.todo._id
+                    });
+                    that.input.value = '';
+                  });
 
-              e.preventDefault();
-            }}
-          >
-            <div className="ui icon input massive">
-              <input
-                placeholder='记录你要做的事吧～'
-                ref={node => {
-                  this.input = node;
-                }} />
-              <i className="send icon"></i>
-            </div>
+                  e.preventDefault();
+                }}
+              >
+                <div className="ui icon input massive">
+                  <input
+                    placeholder='记录你要做的事吧～'
+                    ref={node => {
+                      this.input = node;
+                    }} />
+                  <i className="send icon"></i>
+                </div>
             </form>
+        )
+    }
+}
+class Todo extends Component {
+    render() {
+        let todo = this.props.todo;
+        return (
             <div>
-              {this.props.todos.map(todo =>
                 <div className="ui segment grid" key={todo.id}>
                   <div className="one wide column">
                     <div className="todo toggle"
@@ -139,8 +144,21 @@ class TodoApp extends Component {
                   </div>
 
                 </div>
+            </div>
+        )
+
+    }
+};
+class TodoApp extends Component {
+  render(){
+    return (
+      <div>
+            <TodoInput />
+            <div>
+              {this.props.todos.map(todo =>
+                <Todo todo={todo} />
               )}
-          </div>
+            </div>
       </div>
     )
   }
