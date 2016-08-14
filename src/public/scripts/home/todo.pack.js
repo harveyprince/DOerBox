@@ -83,16 +83,24 @@ class TodoInput extends Component {
 class Todo extends Component {
 
     componentWillAppear (callback) {
+        let todo = this.props.todo;
         const el = findDOMNode(this);
-        TweenMax.fromTo(el, 0.3, {y: -100, opacity: 0}, {y: 0, opacity: 1, onComplete: callback});
+        TweenMax.fromTo(el, 0.3, {y: -100, opacity: 0, height: 0}, {y: 0, opacity: 1, height: todo.height, onComplete: callback});
+    }
+
+    componentDidMount() {
+        let todo = this.props.todo;
+        const height = document.getElementById('item-'+todo.id).clientHeight;
+        todo.height = height;
+        console.log(height);
     }
 
     render() {
         let todo = this.props.todo;
         let that = this;
         return (
-            <div>
-                <div className="ui segment grid" key={todo.id}>
+            <div id={"item-"+todo.id} key={todo.id}>
+                <div className="ui segment grid todo">
                     <div className="one wide column">
                         <div className="todo toggle"
                              onClick={(e)=>{
@@ -136,7 +144,7 @@ class Todo extends Component {
                                 success: function(result){
                                     console.log(result);
                                     if (result.success) {
-                                        TweenMax.fromTo(el, 0.3, {y: 0, opacity: 1}, {y: -100, opacity: 0, onComplete: function(){
+                                        TweenMax.fromTo(el, 0.3, {y: 0, opacity: 1}, {height:0, y: -100, opacity: 0, onComplete: function(){
                                             store.dispatch({
                                               type: 'DEL_TODO',
                                               id: todo.id
