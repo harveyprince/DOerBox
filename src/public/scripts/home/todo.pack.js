@@ -2,6 +2,7 @@
 import { createStore } from 'redux';
 import React,{ Component } from 'react';
 import ReactDOM,{findDOMNode} from 'react-dom';
+import {TransitionMotion, spring, presets} from 'react-motion';
 const todo = (state, action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -81,10 +82,12 @@ class TodoInput extends Component {
 class Todo extends Component {
 
     render() {
-        let todo = this.props.todo;
+        const {style,todo} = this.props;
         return (
             <div>
-                <div className="ui segment grid" key={todo.id}>
+                <div className="ui segment grid"
+                     style={{...style}}
+                >
                     <div className="one wide column">
                         <div className="todo toggle"
                              onClick={(e)=>{
@@ -152,15 +155,60 @@ class Todo extends Component {
 }
 ;
 class TodoApp extends Component {
+    // actual animation-related logic
+    getDefaultStyles() {
+        return this.props.todos.map(todo => ({key: todo.id, data: todo, style: {height: 0, opacity: 1}}));
+    }
+    getStyles() {
+        return this.props.todos.map((todo,i) => {
+            console.log(i);
+            return {
+                key: todo.id,
+                data: todo,
+                style: {
+                    height: spring(60, presets.gentle),
+                    opacity: spring(1, presets.gentle)
+                }
+            }
+        });
+    }
+    willEnter() {
+        return {
+            height: 0,
+            opacity: 1,
+        };
+    }
+    willLeave() {
+        return {
+            height: spring(0),
+            opacity: spring(0),
+        };
+    }
     render() {
         return (
             <div>
                 <TodoInput />
                 <div>
-                    {this.props.todos.map(todo =>
-                        <Todo todo={todo} key={todo.id} />
-                    )}
+                    <TransitionMotion
+                        defaultStyles={this.getDefaultStyles()}
+                        styles={this.getStyles()}
+                        willLeave={this.willLeave}
+                        willEnter={this.willEnter}
+                    >
+                        {styles =>
+                            <div>
+                            {
+                                styles.map(({key,data,style})=>
+
+                                        <Todo key={key} style={style} todo={data} />
+
+                                )
+                            }
+                            </div>
+                        }
+                    </TransitionMotion>
                 </div>
+
             </div>
         )
     }
