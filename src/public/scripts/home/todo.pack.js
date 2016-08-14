@@ -169,7 +169,7 @@ class TodoApp extends Component {
                 <div>
                     {this.props.todos.map(todo =>
                         <TransitionGroup key={todo.id}>
-                            <Todo todo={todo}/>
+                            <Todo todo={todo} />
                         </TransitionGroup>
                     )}
                 </div>
