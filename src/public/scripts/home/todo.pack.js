@@ -2,8 +2,6 @@
 import { createStore } from 'redux';
 import React,{ Component } from 'react';
 import ReactDOM,{findDOMNode} from 'react-dom';
-import TweenMax from 'gsap';
-import TransitionGroup from 'react-addons-transition-group';
 const todo = (state, action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -82,14 +80,8 @@ class TodoInput extends Component {
 }
 class Todo extends Component {
 
-    componentWillAppear (callback) {
-        const el = findDOMNode(this);
-        TweenMax.fromTo(el, 0.3, {y: -100, opacity: 0}, {y: 0, opacity: 1, onComplete: callback});
-    }
-
     render() {
         let todo = this.props.todo;
-        let that = this;
         return (
             <div>
                 <div className="ui segment grid" key={todo.id}>
@@ -126,7 +118,6 @@ class Todo extends Component {
                     <div className="one wide column">
                         <button className="ui compact icon button negative"
                                 onClick={(e)=>{
-                            const el = findDOMNode(that);
                             $.ajax({
                                 url: '/api/web/todo/',
                                 type: 'DELETE',
@@ -136,12 +127,11 @@ class Todo extends Component {
                                 success: function(result){
                                     console.log(result);
                                     if (result.success) {
-                                        TweenMax.fromTo(el, 0.3, {y: 0, opacity: 1}, {y: -100, opacity: 0, onComplete: function(){
-                                            store.dispatch({
-                                              type: 'DEL_TODO',
-                                              id: todo.id
-                                            });
-                                        }});
+
+                                        store.dispatch({
+                                          type: 'DEL_TODO',
+                                          id: todo.id
+                                        });
                                     }
                                 }
 
@@ -168,9 +158,7 @@ class TodoApp extends Component {
                 <TodoInput />
                 <div>
                     {this.props.todos.map(todo =>
-                        <TransitionGroup key={todo.id}>
-                            <Todo todo={todo} />
-                        </TransitionGroup>
+                        <Todo todo={todo} key={todo.id} />
                     )}
                 </div>
             </div>
