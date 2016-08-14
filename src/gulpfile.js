@@ -63,6 +63,7 @@ gulp.task('dev', () => {
         console.log('server restarted');
     });
 });
+gulp.task('build', ['images', 'fonts', 'styles', 'pack_scripts', 'scripts']);
 gulp.task('serve', ['images', 'fonts', 'styles', 'pack_scripts', 'scripts', 'dev'], () => {
   browserSync({
     notify: false,
