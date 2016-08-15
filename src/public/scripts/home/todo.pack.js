@@ -82,23 +82,16 @@ class TodoInput extends Component {
 }
 class Todo extends Component {
 
-    componentDidMount() {
-        let todo = this.props.todo;
-        const height = document.getElementById('item-'+todo.id).clientHeight;
-        todo.height = height;
-    }
-
     componentWillEnter(callback) {
         console.log('component WillEnter');
-        let todo = this.props.todo;
         const el = findDOMNode(this);
-        TweenMax.fromTo(el, 0.3, {y: -100, opacity: 0, height: 0}, {y: 0, opacity: 1, height: todo.height, onComplete: callback});
+        TweenMax.from(el, 0.3, {y: -100, opacity: 0, height: 0, onComplete: callback});
     }
 
     componentWillLeave(callback) {
         console.log('component WillLeave');
         const el = findDOMNode(this);
-        TweenMax.fromTo(el, 0.3, {y: 0, opacity: 1}, {height:0, y: -100, opacity: 0, onComplete: callback});
+        TweenMax.to(el, 0.3, {height:0, y: -100, opacity: 0, onComplete: callback});
     }
 
     render() {
