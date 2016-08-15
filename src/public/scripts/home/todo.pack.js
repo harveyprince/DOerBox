@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 import React,{ Component } from 'react';
 import ReactDOM,{findDOMNode} from 'react-dom';
 import TweenMax from 'gsap';
-import TransitionGroup from 'react-addons-transition-group';
+import ReactTransitionGroup from 'react-addons-transition-group';
 const todo = (state, action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -82,17 +82,23 @@ class TodoInput extends Component {
 }
 class Todo extends Component {
 
-    componentWillAppear (callback) {
+    componentDidMount() {
+        let todo = this.props.todo;
+        const height = document.getElementById('item-'+todo.id).clientHeight;
+        todo.height = height;
+    }
+
+    componentWillEnter(callback) {
+        console.log('component WillEnter');
         let todo = this.props.todo;
         const el = findDOMNode(this);
         TweenMax.fromTo(el, 0.3, {y: -100, opacity: 0, height: 0}, {y: 0, opacity: 1, height: todo.height, onComplete: callback});
     }
 
-    componentDidMount() {
-        let todo = this.props.todo;
-        const height = document.getElementById('item-'+todo.id).clientHeight;
-        todo.height = height;
-        console.log(height);
+    componentWillLeave(callback) {
+        console.log('component WillLeave');
+        const el = findDOMNode(this);
+        TweenMax.fromTo(el, 0.3, {y: 0, opacity: 1}, {height:0, y: -100, opacity: 0, onComplete: callback});
     }
 
     render() {
@@ -134,7 +140,6 @@ class Todo extends Component {
                     <div className="one wide column">
                         <button className="ui compact icon button negative"
                                 onClick={(e)=>{
-                            const el = findDOMNode(that);
                             $.ajax({
                                 url: '/api/web/todo/',
                                 type: 'DELETE',
@@ -144,12 +149,10 @@ class Todo extends Component {
                                 success: function(result){
                                     console.log(result);
                                     if (result.success) {
-                                        TweenMax.fromTo(el, 0.3, {y: 0, opacity: 1}, {height:0, y: -100, opacity: 0, onComplete: function(){
-                                            store.dispatch({
-                                              type: 'DEL_TODO',
-                                              id: todo.id
-                                            });
-                                        }});
+                                        store.dispatch({
+                                          type: 'DEL_TODO',
+                                          id: todo.id
+                                        });
                                     }
                                 }
 
@@ -175,11 +178,11 @@ class TodoApp extends Component {
             <div>
                 <TodoInput />
                 <div>
+                    <ReactTransitionGroup component='div'>
                     {this.props.todos.map(todo =>
-                        <TransitionGroup key={todo.id}>
-                            <Todo todo={todo} />
-                        </TransitionGroup>
+                        <Todo todo={todo} key={todo.id} />
                     )}
+                    </ReactTransitionGroup>
                 </div>
             </div>
         )
