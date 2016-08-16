@@ -25,4 +25,14 @@
     font-size: 25px;
     color: #008080;
   }
+  .todo.input input {
+    padding-left: 2.67142857em !important;
+  }
+  .todo.left {
+    left: 10px;
+  }
+  .todo.cursor {
+    cursor: pointer!important;
+    pointer-events: all!important;
+  }
 }

@@ -1,5 +1,5 @@
 'use strict';
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import React,{ Component } from 'react';
 import ReactDOM,{findDOMNode} from 'react-dom';
 import TweenMax from 'gsap';
@@ -46,8 +46,27 @@ const todos = (state = [], action) => {
             return state;
     }
 }
-
-const store = createStore(todos);
+const filter = (state = {}, action) => {
+    switch (action.type) {
+        case 'SEARCH_KEY':
+            return {
+                ...state,
+                search_key: action.content
+            };
+        case 'TAG_KEY':
+            return {
+                ...state,
+                finish_key: action.content
+            };
+        default:
+            return state;
+    }
+}
+const todoApp = combineReducers({
+    todos,
+    filter
+});
+const store = createStore(todoApp);
 class TodoInput extends Component {
     render() {
         return (
@@ -63,17 +82,39 @@ class TodoInput extends Component {
                             id: data.todo._id
                         });
                         that.input.value = '';
+                        store.dispatch({
+                            type: 'SEARCH_KEY',
+                            content: ''
+                        });
                     });
 
                     e.preventDefault();
                 }}
             >
-                <div className="ui icon input massive">
+                <div className="ui icon input massive todo">
+
+                    <i className="icon settings left todo circular cursor"
+                        onClick={(e)=>{
+                            console.log('clicked');
+                        }}
+                    ></i>
+
                     <input
                         placeholder='记录你要做的事吧～'
                         ref={node => {
-                      this.input = node;
-                    }}/>
+                          this.input = node;
+                        }}
+                        onChange = {(e)=>{
+                            var key = this.input.value;
+
+                            store.dispatch({
+                                type: 'SEARCH_KEY',
+                                content: key
+                            });
+
+
+                        }}
+                    />
                     <i className="send icon"></i>
                 </div>
             </form>
@@ -83,13 +124,11 @@ class TodoInput extends Component {
 class Todo extends Component {
 
     componentWillEnter(callback) {
-        console.log('component WillEnter');
         const el = findDOMNode(this);
         TweenMax.from(el, 0.3, {y: -100, opacity: 0, height: 0, onComplete: callback});
     }
 
     componentWillLeave(callback) {
-        console.log('component WillLeave');
         const el = findDOMNode(this);
         TweenMax.to(el, 0.3, {height:0, y: -100, opacity: 0, onComplete: callback});
     }
@@ -111,7 +150,6 @@ class Todo extends Component {
                                     tag_finish: !todo.tag_finish
                                 },
                                 success: function(result){
-                                    console.log(result);
                                     if (result.success) {
                                         store.dispatch({
                                             type: 'TOGGLE_TODO',
@@ -140,11 +178,10 @@ class Todo extends Component {
                                     _id: todo.id
                                 },
                                 success: function(result){
-                                    console.log(result);
                                     if (result.success) {
                                         store.dispatch({
-                                          type: 'DEL_TODO',
-                                          id: todo.id
+                                            type: 'DEL_TODO',
+                                            id: todo.id
                                         });
                                     }
                                 }
@@ -167,12 +204,18 @@ class Todo extends Component {
 ;
 class TodoApp extends Component {
     render() {
+        const {todos, filter} = this.props.todoApp;
         return (
             <div>
                 <TodoInput />
                 <div>
                     <ReactTransitionGroup component='div'>
-                    {this.props.todos.map(todo =>
+                    {todos.filter((item)=>{
+                        if (filter.search_key && filter.search_key != '') {
+                            return item.content.indexOf(filter.search_key)>=0;
+                        }
+                        return true;
+                    }).map(todo =>
                         <Todo todo={todo} key={todo.id} />
                     )}
                     </ReactTransitionGroup>
@@ -185,7 +228,7 @@ class TodoApp extends Component {
 const render = () => {
     ReactDOM.render(
         <TodoApp
-            todos={store.getState()}
+            todoApp={store.getState()}
         />,
         document.getElementById('app')
     );
