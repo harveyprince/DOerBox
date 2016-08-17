@@ -35,4 +35,19 @@
     cursor: pointer!important;
     pointer-events: all!important;
   }
+  .todo.toggle-box {
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+    width: 40px;
+    height: 40px;
+    background: aliceblue;
+    border-radius: 20px;
+    text-align: center;
+    display: table;
+    i {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 }

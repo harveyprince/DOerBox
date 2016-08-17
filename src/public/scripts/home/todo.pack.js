@@ -99,6 +99,10 @@ class TodoInput extends Component {
                         }}
                     ></i>
 
+                    <div className="todo toggle-box">
+                        <i className="toggle on icon"></i>
+                    </div>
+
                     <input
                         placeholder='记录你要做的事吧～'
                         ref={node => {
