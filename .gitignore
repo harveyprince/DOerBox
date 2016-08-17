@@ -40,4 +40,7 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 
-src
+bower_components
+node_modules
+build
+src/
