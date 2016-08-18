@@ -46,14 +46,16 @@
     left: -15px;
     width: 40px;
     height: 40px;
-    background: aliceblue;
+    background: white;
     border-radius: 20px;
     text-align: center;
     display: table;
     z-index: 10;
+    border:1px solid #0E6EB8;
     i {
       display: table-cell;
       vertical-align: middle;
+      color: #008080;
     }
   }
   .todo.toggle-trigger {

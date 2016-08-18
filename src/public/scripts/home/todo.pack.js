@@ -46,7 +46,10 @@ const todos = (state = [], action) => {
             return state;
     }
 }
-const filter = (state = {}, action) => {
+const filter = (state = {
+    search_key:'',
+    finish_key: 'ALL'
+}, action) => {
     switch (action.type) {
         case 'SEARCH_KEY':
             return {
@@ -68,6 +71,12 @@ const todoApp = combineReducers({
 });
 const store = createStore(todoApp);
 class ToggleBox extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            toggle: false
+        }
+    }
     componentWillEnter(callback) {
         const el = findDOMNode(this);
         TweenMax.from(el, 0.3, {x:35, y: -35, opacity: 0, height: 0, onComplete: callback});
@@ -78,30 +87,51 @@ class ToggleBox extends Component {
         TweenMax.to(el, 0.3, {height: 0,x: 35,  y: -35, opacity: 0, onComplete: callback});
     }
     render() {
+        const {filter} = this.props;
         return (
-            <div className="todo toggle-box" id="toggle-box">
-                <i className="toggle on icon cursor"></i>
+            <div className="todo toggle-box" id="toggle-box"
+                onClick={(e)=>{
+                    if (this.state.toggle) {
+                        store.dispatch({
+                            type: 'TAG_KEY',
+                            content: 'TODO'
+                        });
+                    } else {
+                        store.dispatch({
+                            type: 'TAG_KEY',
+                            content: 'FINISHED'
+                        });
+                    }
+                    this.setState({
+                        toggle: !this.state.toggle
+                    });
+                }}
+            >
+                <i className={"toggle icon cursor "+(this.state.toggle?'on':'off')}></i>
             </div>
         )
     }
 };
-var TodoInput = React.createClass( {
-    getInitialState() {
-        return {toggle: true};
-    },
+class TodoInput extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            toggle: false
+        }
+    }
     componentWillEnter(callback) {
         console.log('enter');
         const el = findDOMNode(this);
         TweenMax.from(el, 0.3, {y: -100, opacity: 0, height: 0, onComplete: callback});
-    },
+    }
 
     componentWillLeave(callback) {
         console.log('leave');
         const el = findDOMNode(this);
         TweenMax.to(el, 0.3, {height: 0, y: -100, opacity: 0, onComplete: callback});
-    },
+    }
     render() {
-        var my_this = this;
+        const {filter} = this.props;
         return (
             <form
                 onSubmit={(e)=>{
@@ -126,13 +156,28 @@ var TodoInput = React.createClass( {
             >
                 <div className="ui icon input massive todo">
 
-                    <i className="icon settings left todo circular cursor toggle-trigger"
+                    <i className="icon filter left todo circular cursor toggle-trigger"
                        onClick={(e)=>{
-                            my_this.setState({toggle: !my_this.state.toggle});
-                        }}
+                            if (!this.state.toggle) {
+                                console.log('TODO');
+                                store.dispatch({
+                                    type: 'TAG_KEY',
+                                    content: 'TODO'
+                                });
+                            } else {
+                                console.log('ALL');
+                                store.dispatch({
+                                    type: 'TAG_KEY',
+                                    content: 'ALL'
+                                });
+                            }
+                            this.setState({
+                                toggle: !this.state.toggle
+                            });
+                       }}
                     ></i>
                     <ReactTransitionGroup component='div'>
-                        { my_this.state.toggle && <ToggleBox /> }
+                        { this.state.toggle && <ToggleBox filter={filter} /> }
                     </ReactTransitionGroup>
 
                     <input
@@ -156,7 +201,7 @@ var TodoInput = React.createClass( {
             </form>
         )
     }
-})
+}
 class Todo extends Component {
 
     componentWillEnter(callback) {
@@ -243,7 +288,9 @@ class TodoApp extends Component {
         const {todos, filter} = this.props.todoApp;
         return (
             <div>
-                <TodoInput />
+                <TodoInput
+                    filter={filter}
+                />
                 <div>
                     <ReactTransitionGroup component='div'>
                         {todos.filter((item)=> {
@@ -251,6 +298,17 @@ class TodoApp extends Component {
                                 return item.content.indexOf(filter.search_key) >= 0;
                             }
                             return true;
+                        }).filter((item)=> {
+                            switch (filter.finish_key) {
+                                case 'ALL':
+                                    return true;
+                                case 'TODO':
+                                    return !item.tag_finish;
+                                case 'FINISHED':
+                                    return item.tag_finish;
+                                default:
+                                    return true;
+                            }
                         }).map(todo =>
                             <Todo todo={todo} key={todo.id}/>
                         )}
