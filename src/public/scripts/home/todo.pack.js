@@ -67,8 +67,41 @@ const todoApp = combineReducers({
     filter
 });
 const store = createStore(todoApp);
-class TodoInput extends Component {
+class ToggleBox extends Component {
+    componentWillEnter(callback) {
+        const el = findDOMNode(this);
+        TweenMax.from(el, 0.3, {x:35, y: -35, opacity: 0, height: 0, onComplete: callback});
+    }
+
+    componentWillLeave(callback) {
+        const el = findDOMNode(this);
+        TweenMax.to(el, 0.3, {height: 0,x: 35,  y: -35, opacity: 0, onComplete: callback});
+    }
     render() {
+        return (
+            <div className="todo toggle-box" id="toggle-box">
+                <i className="toggle on icon cursor"></i>
+            </div>
+        )
+    }
+};
+var TodoInput = React.createClass( {
+    getInitialState() {
+        return {toggle: true};
+    },
+    componentWillEnter(callback) {
+        console.log('enter');
+        const el = findDOMNode(this);
+        TweenMax.from(el, 0.3, {y: -100, opacity: 0, height: 0, onComplete: callback});
+    },
+
+    componentWillLeave(callback) {
+        console.log('leave');
+        const el = findDOMNode(this);
+        TweenMax.to(el, 0.3, {height: 0, y: -100, opacity: 0, onComplete: callback});
+    },
+    render() {
+        var my_this = this;
         return (
             <form
                 onSubmit={(e)=>{
@@ -93,15 +126,14 @@ class TodoInput extends Component {
             >
                 <div className="ui icon input massive todo">
 
-                    <i className="icon settings left todo circular cursor"
+                    <i className="icon settings left todo circular cursor toggle-trigger"
                        onClick={(e)=>{
-                            console.log('clicked');
+                            my_this.setState({toggle: !my_this.state.toggle});
                         }}
                     ></i>
-
-                    <div className="todo toggle-box">
-                        <i className="toggle on icon"></i>
-                    </div>
+                    <ReactTransitionGroup component='div'>
+                        { my_this.state.toggle && <ToggleBox /> }
+                    </ReactTransitionGroup>
 
                     <input
                         placeholder='记录你要做的事吧～'
@@ -124,7 +156,7 @@ class TodoInput extends Component {
             </form>
         )
     }
-}
+})
 class Todo extends Component {
 
     componentWillEnter(callback) {
