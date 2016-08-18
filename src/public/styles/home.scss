@@ -4,15 +4,17 @@
   padding-right: 20px;
   padding-bottom: 50px;
 }
+
 .bottom.segment.attached {
   margin-bottom: 0;
 }
+
 .box {
   width: 70%;
-  max-width:500px;
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
-  .ui.card,.ui.input {
+  .ui.card, .ui.input {
     width: 100%;
   }
   .todo.grid {
@@ -21,7 +23,7 @@
   .todo.content {
     word-wrap: break-word;
   }
-  .todo.toggle>i {
+  .todo.toggle > i {
     font-size: 25px;
     color: #008080;
   }
@@ -32,8 +34,8 @@
     left: 10px;
   }
   .todo.cursor {
-    cursor: pointer!important;
-    pointer-events: all!important;
+    cursor: pointer !important;
+    pointer-events: all !important;
   }
   .todo.toggle-box {
     position: absolute;

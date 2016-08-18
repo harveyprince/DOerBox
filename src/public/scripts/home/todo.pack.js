@@ -94,7 +94,7 @@ class TodoInput extends Component {
                 <div className="ui icon input massive todo">
 
                     <i className="icon settings left todo circular cursor"
-                        onClick={(e)=>{
+                       onClick={(e)=>{
                             console.log('clicked');
                         }}
                     ></i>
@@ -108,7 +108,7 @@ class TodoInput extends Component {
                         ref={node => {
                           this.input = node;
                         }}
-                        onChange = {(e)=>{
+                        onChange={(e)=>{
                             var key = this.input.value;
 
                             store.dispatch({
@@ -134,7 +134,7 @@ class Todo extends Component {
 
     componentWillLeave(callback) {
         const el = findDOMNode(this);
-        TweenMax.to(el, 0.3, {height:0, y: -100, opacity: 0, onComplete: callback});
+        TweenMax.to(el, 0.3, {height: 0, y: -100, opacity: 0, onComplete: callback});
     }
 
     render() {
@@ -214,14 +214,14 @@ class TodoApp extends Component {
                 <TodoInput />
                 <div>
                     <ReactTransitionGroup component='div'>
-                    {todos.filter((item)=>{
-                        if (filter.search_key && filter.search_key != '') {
-                            return item.content.indexOf(filter.search_key)>=0;
-                        }
-                        return true;
-                    }).map(todo =>
-                        <Todo todo={todo} key={todo.id} />
-                    )}
+                        {todos.filter((item)=> {
+                            if (filter.search_key && filter.search_key != '') {
+                                return item.content.indexOf(filter.search_key) >= 0;
+                            }
+                            return true;
+                        }).map(todo =>
+                            <Todo todo={todo} key={todo.id}/>
+                        )}
                     </ReactTransitionGroup>
                 </div>
             </div>

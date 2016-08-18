@@ -2,12 +2,12 @@
  * Created by harveyprince on 16/8/11.
  */
 var Test = require('../../model/test');
-module.exports = function(router) {
+module.exports = function (router) {
     var uri = '/test';
-    router.get(uri, function(req, res, next) {
+    router.get(uri, function (req, res, next) {
         Test
             .findOne({
-                name:'harveyprince'
+                name: 'harveyprince'
             })
             .exec()
             .then((doc) => {
@@ -21,7 +21,7 @@ module.exports = function(router) {
             result: 'result'
         });
     });
-    router.post(uri, function(req, res, next) {
+    router.post(uri, function (req, res, next) {
         var name = req.body.name;
         var test = new Test({
             name

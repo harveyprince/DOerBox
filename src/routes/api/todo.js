@@ -3,7 +3,7 @@
  */
 'use strict';
 var User = require('../../model/user');
-module .exports = function(router) {
+module.exports = function (router) {
     var uri = '/todo';
     //#####################################
     var web_uri = '/web/todo';
@@ -30,14 +30,14 @@ module .exports = function(router) {
                 success: false,
                 message: '内容不得为空'
             });
-            return ;
+            return;
         }
         User
             .findOne({
                 _accountId: account_id
             })
             .exec()
-            .then((doc)=>{
+            .then((doc)=> {
                 if (doc) {
                     //already
                     return doc;
@@ -49,7 +49,7 @@ module .exports = function(router) {
                     return user.save();
                 }
             })
-            .then((doc)=>{
+            .then((doc)=> {
                 var todo = doc.todos.create({
                     content: content,
                 });
@@ -57,7 +57,7 @@ module .exports = function(router) {
                 doc.save();
                 return todo;
             })
-            .then((doc)=>{
+            .then((doc)=> {
                 console.log("todo");
                 console.log(doc);
                 if (doc) {
@@ -67,7 +67,7 @@ module .exports = function(router) {
                     });
                 }
             })
-            .catch((err)=>{
+            .catch((err)=> {
                 res.json({
                     success: false,
                     message: err
@@ -87,7 +87,7 @@ module .exports = function(router) {
                 success: false,
                 message: '标识码不能为空'
             });
-            return ;
+            return;
         }
         User
             .findOne({
@@ -112,8 +112,8 @@ module .exports = function(router) {
                 let content = req.body.content;
                 let tag_finish = req.body.tag_finish;
 
-                todo.content = content?content:todo.content;
-                todo.tag_finish = tag_finish?tag_finish:todo.tag_finish;
+                todo.content = content ? content : todo.content;
+                todo.tag_finish = tag_finish ? tag_finish : todo.tag_finish;
 
                 return doc.save();
 
@@ -145,7 +145,7 @@ module .exports = function(router) {
                 success: false,
                 message: '标识码不能为空'
             });
-            return ;
+            return;
         }
         User
             .findOne({

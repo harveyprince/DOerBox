@@ -3,10 +3,10 @@
  */
 'use strict';
 var User = require('../../model/user');
-module .exports = function(router) {
+module.exports = function (router) {
     var uri = '/todo_list';
     var web_uri = '/web/todo_list';
-    router.get(web_uri, (req, res, next)=>{
+    router.get(web_uri, (req, res, next)=> {
         var sess = req.session;
         let account_id = sess.account_id;
         if (account_id) {
@@ -16,7 +16,7 @@ module .exports = function(router) {
                 })
                 .select('todos')
                 .exec()
-                .then((doc)=>{
+                .then((doc)=> {
                     if (doc) {
                         res.json({
                             success: true,
@@ -29,7 +29,7 @@ module .exports = function(router) {
                         });
                     }
                 })
-                .catch((err)=>{
+                .catch((err)=> {
                     res.json({
                         success: false,
                         message: err

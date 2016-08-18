@@ -42,13 +42,13 @@ module.exports = function (router) {
     });
     router.delete(web_uri, (req, res, next) => {
         var sess = req.session;
-        sess.destroy(function(err) {
+        sess.destroy(function (err) {
             // cannot access session here
             res.json({
                 success: false,
                 message: '注销失败'
             });
-            return ;
+            return;
         })
         res.json({
             success: true,

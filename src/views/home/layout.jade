@@ -1,21 +1,21 @@
 doctype html
 html
-  head
-    title DOerBox
-    link(rel='stylesheet', href='/semantic/dist/semantic.css')
-    link(rel='stylesheet', href='/styles/home.css')
-    script(src='/jquery/dist/jquery.js')
-    script(src='/semantic/dist/semantic.js')
-    script(src='/masonry/dist/masonry.pkgd.js')
-    block head
-  body
-    #container.ui.bottom.attached.segment.pushable
-      include sidebar
-      .ui.top.fixed.menu
-        a.item
-          i.sidebar.icon
-      .pusher
-        block pusher
-    block content
-  script(src='/scripts/home.pack.js')
-  block foot
+    head
+        title DOerBox
+        link(rel='stylesheet', href='/semantic/dist/semantic.css')
+        link(rel='stylesheet', href='/styles/home.css')
+        script(src='/jquery/dist/jquery.js')
+        script(src='/semantic/dist/semantic.js')
+        script(src='/masonry/dist/masonry.pkgd.js')
+        block head
+    body
+        #container.ui.bottom.attached.segment.pushable
+            include sidebar
+            .ui.top.fixed.menu
+                a.item
+                    i.sidebar.icon
+            .pusher
+                block pusher
+        block content
+    script(src='/scripts/home.pack.js')
+    block foot
