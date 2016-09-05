@@ -1,33 +1,16 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View
-} from 'react-native';
-import {SearchBar} from './component/searchbar';
+import React, {Component} from 'react';
+import {Provider} from 'react-redux';
+import Box from './component/Box';
+import configureStore from './store';
+
+let store = configureStore();
 
 export class DOerBox extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <SearchBar />
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-      </View>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <Box />
+            </Provider>
+        );
+    }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  searchbox: {
-    height: 50,
-    alignSelf: 'stretch'
-  }
-});
